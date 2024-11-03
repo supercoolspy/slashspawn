@@ -1,4 +1,5 @@
 import io.papermc.hangarpublishplugin.model.Platforms
+import java.io.ByteArrayOutputStream
 
 plugins {
     kotlin("jvm") version "2.0.21"
@@ -9,7 +10,7 @@ plugins {
 }
 
 group = "dev.spys"
-version = "1.0.0"
+version = "-1.0.1"
 
 repositories {
     mavenCentral()
@@ -30,9 +31,8 @@ dependencies {
     implementation("co.aikar:acf-paper:0.5.1-SNAPSHOT")
 }
 
-val targetJavaVersion = 17
 kotlin {
-    jvmToolchain(targetJavaVersion)
+    jvmToolchain(17)
 }
 
 tasks.build {
@@ -53,10 +53,38 @@ tasks.processResources {
     }
 }
 
+fun executeGitCommand(vararg command: String): String {
+    val byteOut = ByteArrayOutputStream()
+    exec {
+        commandLine = listOf("git", *command)
+        standardOutput = byteOut
+    }
+    return byteOut.toString(Charsets.UTF_8.name()).trim()
+}
+
+fun latestCommitMessage(): String {
+    return executeGitCommand("log", "-1", "--pretty=%B")
+}
+
+val versionString: String = version as String
+val isRelease: Boolean = !versionString.contains('-')
+
+val suffixedVersion: String = if (isRelease) {
+    versionString
+} else {
+    // Give the version a unique name by using the GitHub Actions run number
+    versionString + "+" + System.getenv("GITHUB_RUN_NUMBER")
+}
+
+// Use the commit description for the changelog
+val changelogContent: String = latestCommitMessage()
+
+// If you would like to publish releases with their proper changelogs manually, simply add an if statement with the `isRelease` variable here.
 hangarPublish {
     publications.register("plugin") {
-        version.set(project.version as String)
-        channel.set("Snapshot") // We're using the 'Snapshot' channel
+        version.set(suffixedVersion)
+        channel.set(if (isRelease) "Release" else "Snapshot")
+        changelog.set(changelogContent)
         id.set("slashspawn")
         apiKey.set(System.getenv("HANGAR_API_TOKEN"))
         platforms {
