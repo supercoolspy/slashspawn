@@ -1,0 +1,6 @@
+name: slashspawn
+version: '1.0'
+main: dev.spys.slashspawn.SlashSpawn
+api-version: '1.18'
+libraries:
+  - org.jetbrains.kotlin:kotlin-stdlib:2.0.21
