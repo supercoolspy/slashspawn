@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "dev.spys"
-version = "1.0.1"
+version = "1.0.2"
 
 repositories {
     mavenCentral()
@@ -90,7 +90,7 @@ hangarPublish {
         platforms {
             register(Platforms.PAPER) {
                 // Set the JAR file to upload
-                jar.set(tasks.shadowJar.flatMap { it.archiveFile })
+                jar.set(tasks.reobfJar.flatMap { it.outputJar })
 
                 // Set platform versions from gradle.properties file
                 val versions: List<String> = (property("paperVersion") as String)
