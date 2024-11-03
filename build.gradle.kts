@@ -57,12 +57,12 @@ hangarPublish {
     publications.register("plugin") {
         version.set(project.version as String)
         channel.set("Snapshot") // We're using the 'Snapshot' channel
-        id.set("spy/slashspawn")
+        id.set("slashspawn")
         apiKey.set(System.getenv("HANGAR_API_TOKEN"))
         platforms {
             register(Platforms.PAPER) {
                 // Set the JAR file to upload
-                jar.set(tasks.reobfJar.flatMap { it.outputJar })
+                jar.set(tasks.shadowJar.flatMap { it.archiveFile })
 
                 // Set platform versions from gradle.properties file
                 val versions: List<String> = (property("paperVersion") as String)
