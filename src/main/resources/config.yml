@@ -1,0 +1,5 @@
+Spawn Teleport Message: "<green>Teleporting in %time% seconds"
+Spawn Cancellation Due To Movement Message: "<red>You moved and your teleport has been cancelled"
+No Spawn Message: "<red>No Spawn Has Been Set!"
+Teleport Time: 5
+Cancel On Move: true

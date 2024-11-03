@@ -1,6 +1,8 @@
 plugins {
     kotlin("jvm") version "2.0.21"
     id("com.gradleup.shadow") version "8.3.5"
+    id("io.papermc.paperweight.userdev") version "1.7.3"
+    id("xyz.jpenilla.run-paper") version "2.3.1"
 }
 
 group = "dev.spys"
@@ -20,7 +22,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.18.2-R0.1-SNAPSHOT")
     compileOnly(kotlin("stdlib"))
     implementation("co.aikar:acf-paper:0.5.1-SNAPSHOT")
 }
