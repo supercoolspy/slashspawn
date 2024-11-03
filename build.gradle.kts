@@ -1,12 +1,15 @@
+import io.papermc.hangarpublishplugin.model.Platforms
+
 plugins {
     kotlin("jvm") version "2.0.21"
     id("com.gradleup.shadow") version "8.3.5"
     id("io.papermc.paperweight.userdev") version "1.7.3"
     id("xyz.jpenilla.run-paper") version "2.3.1"
+    id("io.papermc.hangar-publish-plugin") version "0.1.2"
 }
 
 group = "dev.spys"
-version = "1.0"
+version = "1.0.0"
 
 repositories {
     mavenCentral()
@@ -49,3 +52,25 @@ tasks.processResources {
         expand(props)
     }
 }
+
+hangarPublish {
+    publications.register("plugin") {
+        version.set(project.version as String)
+        channel.set("Snapshot") // We're using the 'Snapshot' channel
+        id.set("spy/slashspawn")
+        apiKey.set(System.getenv("HANGAR_API_TOKEN"))
+        platforms {
+            register(Platforms.PAPER) {
+                // Set the JAR file to upload
+                jar.set(tasks.reobfJar.flatMap { it.outputJar })
+
+                // Set platform versions from gradle.properties file
+                val versions: List<String> = (property("paperVersion") as String)
+                    .split(",")
+                    .map { it.trim() }
+                platformVersions.set(versions)
+            }
+        }
+    }
+}
+
